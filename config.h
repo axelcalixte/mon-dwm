@@ -143,9 +143,6 @@ static Key keys[] = {
     {MODKEY, XK_asterisk, focusmon, {.i = +1}},
     {MODKEY | ShiftMask, XK_ugrave, tagmon, {.i = -1}},
     {MODKEY | ShiftMask, XK_asterisk, tagmon, {.i = +1}},
-    {MODKEY | ControlMask, XK_minus, setgaps, {.i = -1}},
-    {MODKEY | ShiftMask, XK_equal, setgaps, {.i = +1}},
-    {MODKEY, XK_equal, setgaps, {.i = 0}},
     TAGKEYS(XK_ampersand, 0) TAGKEYS(XK_eacute, 1) TAGKEYS(XK_quotedbl, 2)
         TAGKEYS(XK_apostrophe, 3) TAGKEYS(XK_parenleft, 4) TAGKEYS(XK_minus, 5)
             TAGKEYS(XK_egrave, 6) TAGKEYS(XK_underscore, 7) TAGKEYS(
