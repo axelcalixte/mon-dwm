@@ -2,6 +2,7 @@
 
 /* appearance */
 static const unsigned int borderpx = 1; /* border pixel of windows */
+static const unsigned int gappx = 6;    /* gaps between windows */
 static const unsigned int snap = 32;    /* snap pixel */
 static const int swallowfloating =
     0;                        /* 1 means swallow floating windows by default */
@@ -124,8 +125,6 @@ static Key keys[] = {
     {MODKEY, XK_l, setmfact, {.f = +0.05}},
     {MODKEY, XK_Return, zoom, {0}},
     {MODKEY, XK_Tab, view, {0}},
-    {MODKEY, XK_Next, shiftviewclients, {.i = +1}},
-    {MODKEY, XK_Prior, shiftviewclients, {.i = -1}},
     {MODKEY | ShiftMask, XK_c, killclient, {0}},
     {MODKEY, XK_t, setlayout, {.v = &layouts[0]}},
     {MODKEY, XK_f, setlayout, {.v = &layouts[1]}},
