@@ -1,17 +1,19 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx = 1; /* border pixel of windows */
-static const unsigned int gappx = 6;    /* gaps between windows */
+static const unsigned int borderpx = 2; /* border pixel of windows */
+static const unsigned int gappx = 3;    /* gaps between windows */
 static const unsigned int snap = 32;    /* snap pixel */
 static const int swallowfloating =
     0;                        /* 1 means swallow floating windows by default */
 static const int showbar = 1; /* 0 means no bar */
 static const int topbar = 1;  /* 0 means bottom bar */
 static const char *fonts[] = {
-    "Liga SFMono Nerd Font:style=Regular:size=12:autohint=true:antialias=true",
-    "Noto Color Emoji:style=Regular:pixelsize=12:antialias=true:autohint=true"};
-static const char dmenufont[] = "Liga SFMono Nerd Font:style=Regular:size=12";
+    "Iosevka Term:style=Regular:size=13:autohint=true:antialias=true",
+    "Font Awesome 5 Free "
+    "Regular:style=Regular:pixelsize=13:antialias=true:autohint=true",
+    "Noto Color Emoji:style=Regular:pixelsize=13:antialias=true:autohint=true"};
+static const char dmenufont[] = "Iosevka Term:style=Regular:size=13";
 static const char col_gray1[] = "#191724"; // nord0 ou rose-pine base
 static const char col_gray2[] = "#26233a"; // nord2 ou rose-pine overlay/surface
 static const char col_gray3[] = "#e0def4"; // nord4 ou rose-pine subtle
@@ -27,16 +29,18 @@ static const char *colors[][3] = {
 static const char *const autostart[] = {
     //"nirogen", "--restore", NULL,  setting wallpaper through
     // lightdm-gtk-greeyer-settings
-    "aslstatus", NULL, "dunst", "-c", "/home/axel/.config/dunst/dunstrc", NULL,
+    "aslstatus", NULL,
+    "xcompmgr", "-c", "-C", "-t-5", "-l-5", "-r4.2", "-o.55", "-f", "-I.15", "-O.17", "-D3", NULL,
+    "dunst", "-c", "/home/axel/.config/dunst/dunstrc", NULL,
     /*"picom",
     "--experimental-backends",
     "-b",
     "--config",
     "/home/axel/.config/picom/picom.conf",
     NULL,*/
-    "xrdb", "-merge", "/home/axel/.config/x11/.Xresources", NULL, "xautolock",
-    "-corners", "----", "-time", "5", "-locker",
-    "/home/axel/bin/scripts/locker.sh", NULL, NULL /* terminate */
+    "xrdb", "-merge", "/home/axel/.config/x11/.Xresources", NULL, 
+    "xautolock", "-locker", "slock", "-time", "5", "-corners", "----", NULL,
+    NULL /* terminate */
 };
 
 /* tagging */
@@ -50,10 +54,11 @@ static const Rule rules[] = {
     /* class     instance  title           tags mask  isfloating  isterminal
        noswallow  monitor */
     {"KeePassXC", "keepassxc", NULL, 1 << 8, 0, 0, 1, -1},
+    {"Claws-mail", "claws-mail", NULL, 1 << 7, 0, 0, 1, -1},
     {"KeePassXC", "keepassxc", "Unlock Database - KeePassXC", 1 << 8, 1, 0, 1,
      -1},
-    {NULL, NULL, "xdg-su: yast2", 0, 1, 0, 1, -1},
-    {"org.opensuse.YaST", "YaST2", NULL, 0, 1, 0, 0, -1},
+    {NULL, NULL, "xdg-su: /sbin/yast2", 0, 1, 1, 1, -1},
+    {NULL, NULL, "xdg-su: /sbin/yast2 sw_single ", 0, 1, 1, 1, -1 },
     {"kitty", NULL, NULL, 0, 0, 1, 0, -1},
     {"St", NULL, NULL, 0, 0, 1, 0, -1},
     {NULL, NULL, "Event Tester", 0, 0, 0, 1, -1}, /* xev */
@@ -63,7 +68,7 @@ static const Rule rules[] = {
 static const float mfact = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster = 1;    /* number of clients in master area */
 static const int resizehints =
-    1; /* 1 means respect size hints in tiled resizals */
+    0; /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen =
     1; /* 1 will force focus on the fullscreen window */
 
@@ -101,7 +106,8 @@ static const char *htop[] = {"st", "-e", "htop", NULL};
 static const char *keepass[] = {"keepassxc", NULL};
 static const char *musicplayer[] = {"st", "-e", "cmus", NULL};
 static const char *mixer[] = {"st", "-e", "pulsemixer", NULL};
-// static const char *mail[] = {"st", "-e", "neomutt", NULL};
+static const char *mail[] = {"claws-mail", "--alternate-config-dir",
+                             "/home/axel/.config/claws-mail", NULL};
 static const char *bluetoothctl[] = {"st", "-e", "bluetoothctl", NULL};
 
 #include <X11/XF86keysym.h>
@@ -115,7 +121,7 @@ static Key keys[] = {
     {Mod1Mask | ShiftMask, XK_k, spawn, {.v = keepass}},
     {Mod1Mask | ShiftMask, XK_m, spawn, {.v = musicplayer}},
     {Mod1Mask | ShiftMask, XK_p, spawn, {.v = mixer}},
-    //{Mod1Mask | ShiftMask, XK_n, spawn, {.v = mail}},
+    {Mod1Mask | ShiftMask, XK_c, spawn, {.v = mail}},
     {MODKEY, XK_b, togglebar, {0}},
     {MODKEY, XK_j, focusstack, {.i = +1}},
     {MODKEY, XK_k, focusstack, {.i = -1}},
@@ -137,10 +143,6 @@ static Key keys[] = {
     {MODKEY, XK_asterisk, focusmon, {.i = +1}},
     {MODKEY | ShiftMask, XK_ugrave, tagmon, {.i = -1}},
     {MODKEY | ShiftMask, XK_asterisk, tagmon, {.i = +1}},
-    {MODKEY, XK_Next, viewnext, {0}},
-    {MODKEY, XK_Prior, viewprev, {0}},
-    {MODKEY | ShiftMask, XK_Next, tagtonext, {0}},
-    {MODKEY | ShiftMask, XK_Prior, tagtoprev, {0}},
     TAGKEYS(XK_ampersand, 0) TAGKEYS(XK_eacute, 1) TAGKEYS(XK_quotedbl, 2)
         TAGKEYS(XK_apostrophe, 3) TAGKEYS(XK_parenleft, 4) TAGKEYS(XK_minus, 5)
             TAGKEYS(XK_egrave, 6) TAGKEYS(XK_underscore, 7) TAGKEYS(
