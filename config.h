@@ -14,12 +14,12 @@ static const char *fonts[] = {
     "Regular:style=Regular:pixelsize=13:antialias=true:autohint=true",
     "Noto Color Emoji:style=Regular:pixelsize=13:antialias=true:autohint=true"};
 static const char dmenufont[] = "Iosevka Term:style=Regular:size=13";
-static const char col_gray1[] = "#191724"; // nord0 ou rose-pine base
-static const char col_gray2[] = "#26233a"; // nord2 ou rose-pine overlay/surface
-static const char col_gray3[] = "#e0def4"; // nord4 ou rose-pine subtle
-static const char col_gray4[] = "#e0def4"; // nord6 ou rose-pine text
+static const char col_gray1[] = "#1F1F28"; // default background
+static const char col_gray2[] = "#2A2A37"; // lighter background
+static const char col_gray3[] = "#DCD7BA"; // default foreground
+static const char col_gray4[] = "#DCD7BA"; // default foreground
 static const char col_cyan[] =
-    "#31748f"; // nord10 ou rose/pine any accent color
+    "#2D4F67"; // crystalBlue
 static const char *colors[][3] = {
     /*               fg         bg         border   */
     [SchemeNorm] = {col_gray3, col_gray1, col_gray2},
@@ -32,6 +32,7 @@ static const char *const autostart[] = {
     "aslstatus", NULL,
     "xcompmgr", "-c", "-C", "-t-5", "-l-5", "-r4.2", "-o.55", "-f", "-I.15", "-O.17", "-D3", NULL,
     "dunst", "-c", "/home/axel/.config/dunst/dunstrc", NULL,
+    "unclutter", NULL,
     /*"picom",
     "--experimental-backends",
     "-b",
@@ -152,12 +153,12 @@ static Key keys[] = {
     {MODKEY | ShiftMask, XK_Delete, quit, {0}},
 
     /* Function keys */
-    {0, XF86XK_AudioMute, spawn, SHCMD("amixer sset Master toggle")},
-    {0, XF86XK_AudioRaiseVolume, spawn, SHCMD("amixer -M set Master 5%+")},
-    {0, XF86XK_AudioLowerVolume, spawn, SHCMD("amixer -M set Master 5%-")},
-    {0, XF86XK_AudioMicMute, spawn, SHCMD("amixer sset Capture toggle")},
-    {0, XF86XK_MonBrightnessUp, spawn, SHCMD("brightnessctl s +5%")},
-    {0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl s 5%-")},
+    {0, XF86XK_AudioMute, spawn, SHCMD("pamixer -t")},
+    {0, XF86XK_AudioRaiseVolume, spawn, SHCMD("pamixer -i5")},
+    {0, XF86XK_AudioLowerVolume, spawn, SHCMD("pamixer -d5")},
+    {0, XF86XK_AudioMicMute, spawn, SHCMD("pamixer --source $(pamixer --list-sources | tail -1 | cut -d' ' -f1) -t")},
+    {0, XF86XK_MonBrightnessUp, spawn, SHCMD("brightnessctl -e s +5%")},
+    {0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl -e s 5%-")},
     {0, XF86XK_Display, spawn, SHCMD("~/.local/bin/scripts/screens.sh")},
     //{ 0, XF86XK_Tools,	        spawn,		SHCMD("") },
     {0, XF86XK_Bluetooth, spawn, {.v = bluetoothctl}},
