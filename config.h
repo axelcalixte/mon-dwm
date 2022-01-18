@@ -163,7 +163,7 @@ static Key keys[] = {
     //{ 0, XF86XK_Tools,	        spawn,		SHCMD("") },
     {0, XF86XK_Bluetooth, spawn, {.v = bluetoothctl}},
     //{ 0, XF86XK_Wakeup,       	spawn,		SHCMD("") },
-    //{ 0, XF86XK_Favorites,    	spawn,		SHCMD("") },
+    { 0, XF86XK_Favorites,    	spawn,		SHCMD("~/.local/bin/scripts/weather.sh") },
 
     /* CMUS music control */
     {MODKEY, XK_Right, spawn, SHCMD("cmus-remote --next")},
