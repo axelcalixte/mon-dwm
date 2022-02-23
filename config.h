@@ -9,17 +9,16 @@ static const int swallowfloating =
 static const int showbar = 1; /* 0 means no bar */
 static const int topbar = 1;  /* 0 means bottom bar */
 static const char *fonts[] = {
-    "Iosevka Term:style=Regular:size=13:autohint=true:antialias=true",
+    "Iosevka:style=Regular:pixelsize=17:autohint=true:antialias=true",
     "Font Awesome 5 Free "
-    "Regular:style=Regular:pixelsize=13:antialias=true:autohint=true",
-    "Noto Color Emoji:style=Regular:pixelsize=13:antialias=true:autohint=true"};
-static const char dmenufont[] = "Iosevka Term:style=Regular:size=13";
+    "Regular:style=Regular:pixelsize=17:antialias=true:autohint=true",
+    "Noto Color Emoji:style=Regular:pixelsize=17:antialias=true:autohint=true"};
+static const char dmenufont[] = "Iosevka:style=Regular:size=13";
 static const char col_gray1[] = "#1F1F28"; // default background
 static const char col_gray2[] = "#2A2A37"; // lighter background
 static const char col_gray3[] = "#DCD7BA"; // default foreground
 static const char col_gray4[] = "#DCD7BA"; // default foreground
-static const char col_cyan[] =
-    "#223249"; // waveBlue1
+static const char col_cyan[] = "#223249";  // waveBlue1
 static const char *colors[][3] = {
     /*               fg         bg         border   */
     [SchemeNorm] = {col_gray3, col_gray1, col_gray2},
@@ -30,18 +29,12 @@ static const char *const autostart[] = {
     //"nirogen", "--restore", NULL,  setting wallpaper through
     // lightdm-gtk-greeyer-settings
     "aslstatus", NULL,
-    "xcompmgr", "-c", "-C", "-t-5", "-l-5", "-r4.2", "-o.55", "-f", "-I.15", "-O.17", "-D3", NULL,
-    "dunst", "-c", "/home/axel/.config/dunst/dunstrc", NULL,
-    "unclutter", NULL,
-    /*"picom",
-    "--experimental-backends",
-    "-b",
-    "--config",
-    "/home/axel/.config/picom/picom.conf",
-    NULL,*/
-    "xrdb", "-merge", "/home/axel/.config/x11/.Xresources", NULL, 
-    "xautolock", "-locker", "slock", "-time", "5", "-corners", "----", NULL,
-    NULL /* terminate */
+    //"xcompmgr", "-c", "-C", "-t-5", "-l-5", "-r4.2", "-o.55",
+    "-f", "-I.15", "-O.17", "-D3", NULL, "dunst", "-c",
+    "/home/axel/.config/dunst/dunstrc", NULL, "picom",
+    "--experimental-backends", NULL, "xrdb", "-merge",
+    "/home/axel/.config/x11/.Xresources", NULL, "xautolock", "-locker", "slock",
+    "-time", "5", "-corners", "----", NULL, NULL /* terminate */
 };
 
 /* tagging */
@@ -59,7 +52,7 @@ static const Rule rules[] = {
     {"KeePassXC", "keepassxc", "Unlock Database - KeePassXC", 1 << 8, 1, 0, 1,
      -1},
     {NULL, NULL, "xdg-su: /sbin/yast2", 0, 1, 1, 1, -1},
-    {NULL, NULL, "xdg-su: /sbin/yast2 sw_single ", 0, 1, 1, 1, -1 },
+    {NULL, NULL, "xdg-su: /sbin/yast2 sw_single ", 0, 1, 1, 1, -1},
     {"kitty", NULL, NULL, 0, 0, 1, 0, -1},
     {"St", NULL, NULL, 0, 0, 1, 0, -1},
     {NULL, NULL, "Event Tester", 0, 0, 0, 1, -1}, /* xev */
@@ -100,7 +93,7 @@ static char dmenumon[2] =
 static const char *dmenucmd[] = {
     "dmenu_run", "-m",      dmenumon, "-fn",    dmenufont, "-nb",     col_gray1,
     "-nf",       col_gray3, "-sb",    col_cyan, "-sf",     col_gray4, NULL};
-static const char *termcmd[] = {"kitty", "--single-instance", NULL};
+static const char *termcmd[] = {"st", "-e", "tmux", NULL};
 static const char *web[] = {"firefox", NULL};
 static const char *filemanager[] = {"st", "-e", "nnn", "-C", NULL};
 static const char *htop[] = {"st", "-e", "htop", NULL};
@@ -110,6 +103,19 @@ static const char *mixer[] = {"st", "-e", "pulsemixer", NULL};
 static const char *mail[] = {"claws-mail", "--alternate-config-dir",
                              "/home/axel/.config/claws-mail", NULL};
 static const char *bluetoothctl[] = {"st", "-e", "bluetoothctl", NULL};
+
+/* commands spawned when clicking statusbar, the mouse button pressed is
+ * exported as BUTTON */
+static const StatusCmd statuscmds[] = {
+    {"sudo zypper dup", 1},
+    {"/home/axel/.local/bin/scripts/weather.sh", 2},
+    {"pulsemixer", 3},
+    {"pamixer --source $(pamixer --list-sources | tail -1 | cut -d' ' -f1) -t",
+     4},
+    {"sudo nmtui", 5},
+    {"cal", 6},
+};
+static const char *statuscmd[] = {"/bin/sh", "-c", NULL, NULL};
 
 #include <X11/XF86keysym.h>
 static Key keys[] = {
@@ -156,14 +162,21 @@ static Key keys[] = {
     {0, XF86XK_AudioMute, spawn, SHCMD("pamixer -t")},
     {0, XF86XK_AudioRaiseVolume, spawn, SHCMD("pamixer -i5")},
     {0, XF86XK_AudioLowerVolume, spawn, SHCMD("pamixer -d5")},
-    {0, XF86XK_AudioMicMute, spawn, SHCMD("pamixer --source $(pamixer --list-sources | tail -1 | cut -d' ' -f1) -t")},
+    {0, XF86XK_AudioMicMute, spawn,
+     SHCMD("pamixer --source $(pamixer --list-sources | tail -1 | cut -d' ' "
+           "-f1) -t")},
     {0, XF86XK_MonBrightnessUp, spawn, SHCMD("brightnessctl -e s +5%")},
     {0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl -e s 5%-")},
     {0, XF86XK_Display, spawn, SHCMD("~/.local/bin/scripts/screens.sh")},
     //{ 0, XF86XK_Tools,	        spawn,		SHCMD("") },
     {0, XF86XK_Bluetooth, spawn, {.v = bluetoothctl}},
     //{ 0, XF86XK_Wakeup,       	spawn,		SHCMD("") },
-    { 0, XF86XK_Favorites,    	spawn,		SHCMD("~/.local/bin/scripts/weather.sh") },
+    {0, XF86XK_Favorites, spawn, SHCMD("~/.local/bin/scripts/weather.sh")},
+    {Mod1Mask | ShiftMask, XK_t, spawn,
+     SHCMD("tmux list-session | dmenu -l 5 | cut -d':' -f1 | xargs tmux "
+           "kill-session -t")},
+    //{Mod1Mask | ShiftMask, XK_a, spawn,SHCMD("t=$(tmux list-session | dmenu -l
+    // 5 | cut -d':' -f1); st -e 'tmux attach-session -t $t'")},
 
     /* CMUS music control */
     {MODKEY, XK_Right, spawn, SHCMD("cmus-remote --next")},
@@ -188,7 +201,9 @@ static Button buttons[] = {
     {ClkLtSymbol, 0, Button1, setlayout, {0}},
     {ClkLtSymbol, 0, Button3, setlayout, {.v = &layouts[2]}},
     {ClkWinTitle, 0, Button2, zoom, {0}},
-    {ClkStatusText, 0, Button2, spawn, {.v = termcmd}},
+    {ClkStatusText, 0, Button1, spawn, {.v = statuscmd}},
+    {ClkStatusText, 0, Button2, spawn, {.v = statuscmd}},
+    {ClkStatusText, 0, Button3, spawn, {.v = statuscmd}},
     {ClkClientWin, MODKEY, Button1, movemouse, {0}},
     {ClkClientWin, MODKEY, Button2, togglefloating, {0}},
     {ClkClientWin, MODKEY, Button3, resizemouse, {0}},
