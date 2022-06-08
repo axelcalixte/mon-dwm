@@ -9,16 +9,17 @@ static const int swallowfloating =
 static const int showbar = 1; /* 0 means no bar */
 static const int topbar = 1;  /* 0 means bottom bar */
 static const char *fonts[] = {
-    "Iosevka:style=Regular:pixelsize=17:autohint=true:antialias=true",
+    "Liga SFMono Nerd "
+    "Font:style=Regular:pixelsize=15:autohint=true:antialias=true",
     "Font Awesome 5 Free "
-    "Regular:style=Regular:pixelsize=17:antialias=true:autohint=true",
-    "Noto Color Emoji:style=Regular:pixelsize=17:antialias=true:autohint=true"};
-static const char dmenufont[] = "Iosevka:style=Regular:size=13";
-static const char col_gray1[] = "#1F1F28"; // default background
-static const char col_gray2[] = "#2A2A37"; // lighter background
-static const char col_gray3[] = "#DCD7BA"; // default foreground
-static const char col_gray4[] = "#DCD7BA"; // default foreground
-static const char col_cyan[] = "#223249";  // waveBlue1
+    "Regular:style=Regular:pixelsize=15:antialias=true:autohint=true",
+    "Noto Color Emoji:style=Regular:pixelsize=15:antialias=true:autohint=true"};
+static const char dmenufont[] = "Liga SFMono Nerd Font:style=Regular:size=11";
+static const char col_gray1[] = "#191724"; // default background
+static const char col_gray2[] = "#1f1d2e"; // lighter background
+static const char col_gray3[] = "#e0def4"; // default foreground
+static const char col_gray4[] = "#e0def4"; // default foreground
+static const char col_cyan[] = "#286983";  // waveBlue1
 static const char *colors[][3] = {
     /*               fg         bg         border   */
     [SchemeNorm] = {col_gray3, col_gray1, col_gray2},
@@ -26,15 +27,14 @@ static const char *colors[][3] = {
 };
 
 static const char *const autostart[] = {
-    //"nirogen", "--restore", NULL,  setting wallpaper through
-    // lightdm-gtk-greeyer-settings
-    "aslstatus", NULL,
-    //"xcompmgr", "-c", "-C", "-t-5", "-l-5", "-r4.2", "-o.55",
-    "-f", "-I.15", "-O.17", "-D3", NULL, "dunst", "-c",
-    "/home/axel/.config/dunst/dunstrc", NULL, "picom",
-    "--experimental-backends", NULL, "xrdb", "-merge",
-    "/home/axel/.config/x11/.Xresources", NULL, "xautolock", "-locker", "slock",
-    "-time", "5", "-corners", "----", NULL, NULL /* terminate */
+    "aslstatus", NULL, "setxkbmap", "-option", "caps:swapescape", NULL,
+    "xcompmgr", "-c", "-C", "-t-5", "-l-5", "-r4.2", "-o.55", "-f", "-I.15",
+    "-O.17", "-D3", NULL, "dunst", "-c", "/home/axel/.config/dunst/dunstrc",
+    NULL,
+    //"picom", "--experimental-backends", NULL,
+    "xrdb", "-merge", "/home/axel/.config/x11/.Xresources", NULL, "xautolock",
+    "-locker", "slock", "-time", "5", "-corners", "----", NULL, "nitrogen",
+    "--restore", NULL, NULL /* terminate */
 };
 
 /* tagging */
@@ -47,13 +47,18 @@ static const Rule rules[] = {
      */
     /* class     instance  title           tags mask  isfloating  isterminal
        noswallow  monitor */
+    {"firefox", "Navigator", NULL, 1 << 1, 0, 0, 1, -1},
+    {"Chromium-browser", "chromium-browser", NULL, 1 << 1, 0, 0, 1, -1},
     {"KeePassXC", "keepassxc", NULL, 1 << 8, 0, 0, 1, -1},
     {"Claws-mail", "claws-mail", NULL, 1 << 7, 0, 0, 1, -1},
+    {"discord", "discord", NULL, 1 << 4, 0, 0, 1, -1},
+    {"TelegramDesktop", "telegram-desktop", NULL, 1 << 5, 0, 0, 1, -1},
+    {"Signal", "signal", NULL, 1 << 5, 0, 0, 1, -1},
     {"KeePassXC", "keepassxc", "Unlock Database - KeePassXC", 1 << 8, 1, 0, 1,
      -1},
     {NULL, NULL, "xdg-su: /sbin/yast2", 0, 1, 1, 1, -1},
     {NULL, NULL, "xdg-su: /sbin/yast2 sw_single ", 0, 1, 1, 1, -1},
-    {"kitty", NULL, NULL, 0, 0, 1, 0, -1},
+    {"kitty", NULL, NULL, 1 << 0, 0, 1, 0, -1},
     {"St", NULL, NULL, 0, 0, 1, 0, -1},
     {NULL, NULL, "Event Tester", 0, 0, 0, 1, -1}, /* xev */
 };
@@ -64,7 +69,7 @@ static const int nmaster = 1;    /* number of clients in master area */
 static const int resizehints =
     0; /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen =
-    1; /* 1 will force focus on the fullscreen window */
+    0; /* 1 will force focus on the fullscreen window */
 
 static const Layout layouts[] = {
     /* symbol     arrange function */
@@ -93,7 +98,7 @@ static char dmenumon[2] =
 static const char *dmenucmd[] = {
     "dmenu_run", "-m",      dmenumon, "-fn",    dmenufont, "-nb",     col_gray1,
     "-nf",       col_gray3, "-sb",    col_cyan, "-sf",     col_gray4, NULL};
-static const char *termcmd[] = {"st", "-e", "tmux", NULL};
+static const char *termcmd[] = {"kitty", NULL};
 static const char *web[] = {"firefox", NULL};
 static const char *filemanager[] = {"st", "-e", "nnn", "-C", NULL};
 static const char *htop[] = {"st", "-e", "htop", NULL};
@@ -177,6 +182,10 @@ static Key keys[] = {
            "kill-session -t")},
     //{Mod1Mask | ShiftMask, XK_a, spawn,SHCMD("t=$(tmux list-session | dmenu -l
     // 5 | cut -d':' -f1); st -e 'tmux attach-session -t $t'")},
+    {MODKEY, XK_w, spawn,
+     SHCMD(
+         "w=$(echo '' | dmenu -p 'web search'); case '$w' in '' ) exit 0 ;; * "
+         ") firefox 'https://duckduckgo.com/?q='$w'';; esac")},
 
     /* CMUS music control */
     {MODKEY, XK_Right, spawn, SHCMD("cmus-remote --next")},
